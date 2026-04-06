@@ -22,7 +22,20 @@
   border-color: var(--color-accent);
 }
 
-.task-detail-file:focus-visible {
+.task-detail-file-preview {
+  flex: 1;
+  min-width: 0;
+  border: none;
+  background: transparent;
+  padding: 0;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  cursor: pointer;
+  text-align: left;
+}
+
+.task-detail-file-preview:focus-visible {
   outline: 2px solid #29abe2;
   outline-offset: 2px;
 }
@@ -56,6 +69,23 @@
   color: var(--color-text-muted);
   font-size: 14px;
   line-height: 1.4;
+}
+
+.task-detail-file-download {
+  width: 36px;
+  height: 36px;
+  border: 1px solid var(--color-border-light);
+  border-radius: 50%;
+  background: var(--color-bg-surface);
+  display: grid;
+  place-items: center;
+  flex-shrink: 0;
+}
+
+.task-detail-file-download img {
+  width: 18px;
+  height: 18px;
+  display: block;
 }
 
 @media (max-width: 800px) {

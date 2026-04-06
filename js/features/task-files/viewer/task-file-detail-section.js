@@ -54,18 +54,52 @@ function buildTaskFilesList(files) {
  * @returns {HTMLElement}
  */
 function buildTaskFileItem(files, file, index) {
-  const item = document.createElement("button");
-  item.type = "button";
+  const item = document.createElement("div");
   item.className = "task-detail-file";
-  item.setAttribute("aria-label", `Open image ${file.name || index + 1}`);
-  item.addEventListener("click", () => {
+  item.appendChild(buildTaskFilePreviewButton(files, file, index));
+  item.appendChild(buildTaskFileDownloadButton(file));
+  return item;
+}
+
+/**
+ * Builds the clickable preview button.
+ * @param {Array} files
+ * @param {Object} file
+ * @param {number} index
+ * @returns {HTMLButtonElement}
+ */
+function buildTaskFilePreviewButton(files, file, index) {
+  const button = document.createElement("button");
+  button.type = "button";
+  button.className = "task-detail-file-preview";
+  button.setAttribute("aria-label", `Open image ${file.name || index + 1}`);
+  button.addEventListener("click", () => {
     if (typeof openTaskFileViewer === "function") {
       openTaskFileViewer(files, index);
     }
   });
-  item.appendChild(buildTaskFileThumb(file, index));
-  item.appendChild(buildTaskFileMeta(file));
-  return item;
+  button.appendChild(buildTaskFileThumb(file, index));
+  button.appendChild(buildTaskFileMeta(file));
+  return button;
+}
+
+/**
+ * Builds the file download button.
+ * @param {Object} file
+ * @returns {HTMLAnchorElement}
+ */
+function buildTaskFileDownloadButton(file) {
+  const link = document.createElement("a");
+  const icon = document.createElement("img");
+  link.className = "task-detail-file-download";
+  link.href = file.base64 || "#";
+  link.download = file.name || "image";
+  link.setAttribute("aria-label", `Download file ${file.name || "image"}`);
+  icon.src = "/assets/img/icons/ckbehera-download-6155763.svg";
+  icon.alt = "";
+  icon.setAttribute("aria-hidden", "true");
+  link.appendChild(icon);
+  return link;
 }
 
 /**
