@@ -91,6 +91,7 @@ function getAddTaskRightColumn() {
           ${getAddTaskPriorityBlock()}
           ${getAddTaskAssignedBlock()}
           ${getAddTaskCategoryBlock()}
+          ${getAddTaskFileUploadBlock()}
           ${getAddTaskSubtaskBlock()}
         </div>
       </div>
@@ -141,6 +142,35 @@ function getAddTaskCategoryBlock() {
     `  </div>\n` +
     `</div>\n`
   );
+}
+
+/**
+ * Builds the file upload block HTML.
+ * @returns {string}
+ */
+function getAddTaskFileUploadBlock() {
+  return `
+    <label for="task-files">Files</label>
+    <div class="file-upload-field">
+      <input
+        id="task-files"
+        class="file-upload-native"
+        type="file"
+        accept="image/png,image/jpeg,image/webp,image/gif"
+        multiple
+      />
+      <label for="task-files" class="file-upload-trigger">
+        <span class="file-upload-placeholder">Upload images</span>
+        <img
+          class="file-upload-icon"
+          src="/assets/img/icons/plus-button-1.svg"
+          alt=""
+          aria-hidden="true"
+        />
+      </label>
+    </div>
+    <div class="field-error" id="task-files-error"></div>
+  `;
 }
 
 /**

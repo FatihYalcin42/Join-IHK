@@ -1,0 +1,49 @@
+.file-upload-field {
+  position: relative;
+}
+
+.file-upload-native {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
+}
+
+.file-upload-trigger {
+  width: 100%;
+  border: 1px solid var(--color-border-light);
+  border-radius: 10px;
+  padding: 12px 14px;
+  font-size: 16px;
+  font-weight: 400;
+  line-height: 28px;
+  background: var(--color-bg-surface);
+  color: var(--color-text-primary);
+  box-sizing: border-box;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  cursor: pointer;
+}
+
+.file-upload-placeholder {
+  color: #d1d1d1;
+}
+
+.file-upload-icon {
+  width: 32px;
+  height: 32px;
+  display: block;
+  flex-shrink: 0;
+}
+
+.file-upload-field:focus-within .file-upload-trigger {
+  outline: 2px solid #29abe2;
+  outline-offset: 2px;
+}

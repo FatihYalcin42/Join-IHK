@@ -80,7 +80,7 @@
           <span class="dropdown-placeholder" data-category-value>Select task category</span>
           <span class="dropdown-caret" aria-hidden="true"></span>
         </button>
-        <div class="dropdown-menu" data-category-menu hidden>
+      <div class="dropdown-menu" data-category-menu hidden>
           <button
             type="button"
             class="dropdown-item"
@@ -101,6 +101,27 @@
           </button>
         </div>
       </div>
+
+      <label for="task-files">Files</label>
+      <div class="file-upload-field">
+        <input
+          id="task-files"
+          class="file-upload-native"
+          type="file"
+          accept="image/png,image/jpeg,image/webp,image/gif"
+          multiple
+        />
+        <label for="task-files" class="file-upload-trigger">
+          <span class="file-upload-placeholder">Upload images</span>
+          <img
+            class="file-upload-icon"
+            src="/assets/img/icons/plus-button-1.svg"
+            alt=""
+            aria-hidden="true"
+          />
+        </label>
+      </div>
+      <div class="field-error" id="task-files-error"></div>
 
   <label>Subtasks</label>
   <div class="subtask-row">
