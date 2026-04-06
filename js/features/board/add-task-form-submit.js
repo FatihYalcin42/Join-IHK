@@ -47,6 +47,8 @@ async function submitTaskForm(state, values, onClose) {
     await persistTask(state, values);
     await refreshBoardIfNeeded();
     handleSubmitSuccess(state, onClose);
+  } catch (error) {
+    handleSubmitFailure(state, error);
   } finally {
     setCreateButtonBusy(state, false);
   }
@@ -89,7 +91,7 @@ function setCreateButtonBusy(state, busy) {
  * Updates an existing task.
  */
 async function updateExistingTask(state, values) {
-  const updatedTask = buildTaskPayload(state, values, state.task);
+  const updatedTask = await buildTaskPayload(state, values, state.task);
   await TaskService.update(state.task.id, updatedTask);
 }
 
@@ -98,7 +100,7 @@ async function updateExistingTask(state, values) {
  */
 async function createNewTask(state, values) {
   const taskId = await generateTaskId();
-  const newTask = buildTaskPayload(state, values, { id: taskId });
+  const newTask = await buildTaskPayload(state, values, { id: taskId });
   await TaskService.create(newTask);
 }
 
@@ -106,7 +108,7 @@ async function createNewTask(state, values) {
  * Builds the task payload.
  * @returns {Object}
  */
-function buildTaskPayload(state, values, base) {
+async function buildTaskPayload(state, values, base) {
   return {
     ...base,
     title: values.title,
@@ -117,7 +119,49 @@ function buildTaskPayload(state, values, base) {
     assigned: state.selectedAssigned,
     dueDate: values.dueDate,
     subtasks: state.selectedSubtasks,
+    files: await buildTaskFilesPayload(state, base),
   };
+}
+
+/**
+ * Builds the persisted task files payload.
+ * @param {Object} state
+ * @param {Object} base
+ * @returns {Promise<Array>}
+ */
+async function buildTaskFilesPayload(state, base) {
+  const existingFiles = normalizePersistedTaskFiles(base?.files);
+  const newFiles = await serializeTaskFiles(state.selectedFiles);
+  const mergedFiles = mergePersistedTaskFiles(existingFiles, newFiles);
+  if (exceedsPersistedTaskFileLimit(mergedFiles)) {
+    throw createTaskFileSaveError(getTaskFileLimitErrorMessage());
+  }
+  return mergedFiles;
+}
+
+/**
+ * Creates a task-file specific save error.
+ * @param {string} message
+ * @returns {Error}
+ */
+function createTaskFileSaveError(message) {
+  const error = new Error(message);
+  error.code = "TASK_FILE_SAVE_ERROR";
+  return error;
+}
+
+/**
+ * Handles submit failures.
+ * @param {Object} state
+ * @param {Error} error
+ */
+function handleSubmitFailure(state, error) {
+  console.error("Task submit failed:", error);
+  const message = error?.message || "Task could not be saved.";
+  if (error?.code === "TASK_FILE_SAVE_ERROR") {
+    showTaskFileError(state, message);
+  }
+  setAddTaskFormMsg(state, message);
 }
 
 /**
