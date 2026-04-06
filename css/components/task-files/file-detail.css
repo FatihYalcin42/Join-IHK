@@ -8,10 +8,23 @@
   display: flex;
   align-items: center;
   gap: 12px;
+  width: 100%;
   padding: 10px 12px;
   border: 1px solid var(--color-border-light);
   border-radius: 14px;
   background: var(--color-bg-primary);
+  cursor: pointer;
+  text-align: left;
+  box-sizing: border-box;
+}
+
+.task-detail-file:hover {
+  border-color: var(--color-accent);
+}
+
+.task-detail-file:focus-visible {
+  outline: 2px solid #29abe2;
+  outline-offset: 2px;
 }
 
 .task-detail-file-thumb {

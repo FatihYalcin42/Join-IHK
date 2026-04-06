@@ -40,19 +40,29 @@ function buildTaskFilesSection(files) {
 function buildTaskFilesList(files) {
   const list = document.createElement("div");
   list.className = "task-detail-files";
-  files.forEach((file, index) => list.appendChild(buildTaskFileItem(file, index)));
+  files.forEach((file, index) => {
+    list.appendChild(buildTaskFileItem(files, file, index));
+  });
   return list;
 }
 
 /**
  * Builds one task file item.
+ * @param {Array} files
  * @param {Object} file
  * @param {number} index
  * @returns {HTMLElement}
  */
-function buildTaskFileItem(file, index) {
-  const item = document.createElement("div");
+function buildTaskFileItem(files, file, index) {
+  const item = document.createElement("button");
+  item.type = "button";
   item.className = "task-detail-file";
+  item.setAttribute("aria-label", `Open image ${file.name || index + 1}`);
+  item.addEventListener("click", () => {
+    if (typeof openTaskFileViewer === "function") {
+      openTaskFileViewer(files, index);
+    }
+  });
   item.appendChild(buildTaskFileThumb(file, index));
   item.appendChild(buildTaskFileMeta(file));
   return item;

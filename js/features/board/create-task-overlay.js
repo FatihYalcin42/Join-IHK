@@ -25,6 +25,7 @@ function openTaskOverlayRoot() {
 }
 
 function closeTaskOverlay() {
+  if (typeof closeTaskFileViewer === "function") closeTaskFileViewer();
   const root = document.getElementById("overlayRoot");
   if (!root) return;
   root.classList.add("hidden");
