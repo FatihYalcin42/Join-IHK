@@ -72,25 +72,17 @@
 }
 
 .task-detail-file-download {
-  min-width: 0;
-  height: 36px;
-  padding: 0 12px;
-  border: 1px solid var(--color-border-light);
-  border-radius: 999px;
-  background: var(--color-bg-surface);
-  display: inline-flex;
-  align-items: center;
-  gap: 8px;
+  width: 24px;
+  height: 24px;
+  display: grid;
+  place-items: center;
   flex-shrink: 0;
-  color: var(--color-text-primary);
   text-decoration: none;
-  transition: filter 0.12s ease, background-color 0.12s ease, border-color 0.12s ease;
+  transition: filter 0.12s ease, opacity 0.12s ease;
 }
 
 .task-detail-file-download:hover {
-  background: #eef5ff;
-  border-color: #b9d7ff;
-  filter: brightness(1.03);
+  filter: brightness(1.2);
 }
 
 .task-detail-file-download:focus-visible {
@@ -102,12 +94,6 @@
   width: 18px;
   height: 18px;
   display: block;
-}
-
-.task-detail-file-download-label {
-  font-size: 14px;
-  font-weight: 600;
-  line-height: 1;
 }
 
 @media (max-width: 800px) {

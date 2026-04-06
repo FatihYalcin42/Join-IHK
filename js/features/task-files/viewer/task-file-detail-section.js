@@ -91,7 +91,6 @@ function buildTaskFilePreviewButton(files, file, index) {
 function buildTaskFileDownloadButton(file) {
   const link = document.createElement("a");
   const icon = document.createElement("img");
-  const label = document.createElement("span");
   link.className = "task-detail-file-download";
   link.href = file.base64 || "#";
   link.download = file.name || "image";
@@ -99,10 +98,7 @@ function buildTaskFileDownloadButton(file) {
   icon.src = "/assets/img/icons/ckbehera-download-6155763.svg";
   icon.alt = "";
   icon.setAttribute("aria-hidden", "true");
-  label.className = "task-detail-file-download-label";
-  label.textContent = "Download";
   link.appendChild(icon);
-  link.appendChild(label);
   return link;
 }
 
