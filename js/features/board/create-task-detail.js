@@ -18,6 +18,7 @@ function fillTaskDetail(detail, task) {
   detail.appendChild(createDetailMeta(task));
   detail.appendChild(createAssignedSection(task));
   detail.appendChild(createSubtasksSection(task));
+  detail.appendChild(createTaskFilesSection(task));
   detail.appendChild(createDetailActions(task));
 }
 
