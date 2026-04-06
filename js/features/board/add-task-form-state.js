@@ -158,7 +158,9 @@ function applyTaskDefaults(state, taskData) {
   state.selectedPrio = String(taskData.prio || "medium").toLowerCase();
   applyPrioButtonStyles(state);
   state.selectedAssigned = normalizeAssignedFromTask(taskData.assigned);
+  state.selectedFiles = createPersistedTaskFileEntries(taskData.files);
   state.selectedSubtasks = normalizeSubtasksFromTask(taskData.subtasks);
+  renderTaskFilePreview(state);
   renderSubtasks(state);
 }
 

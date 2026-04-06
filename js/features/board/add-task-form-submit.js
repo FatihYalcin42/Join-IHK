@@ -130,13 +130,11 @@ async function buildTaskPayload(state, values, base) {
  * @returns {Promise<Array>}
  */
 async function buildTaskFilesPayload(state, base) {
-  const existingFiles = normalizePersistedTaskFiles(base?.files);
-  const newFiles = await serializeTaskFiles(state.selectedFiles);
-  const mergedFiles = mergePersistedTaskFiles(existingFiles, newFiles);
-  if (exceedsPersistedTaskFileLimit(mergedFiles)) {
+  const files = await serializeTaskFiles(state.selectedFiles);
+  if (exceedsPersistedTaskFileLimit(files)) {
     throw createTaskFileSaveError(getTaskFileLimitErrorMessage());
   }
-  return mergedFiles;
+  return files;
 }
 
 /**

@@ -110,6 +110,46 @@ function createTaskFileEntry(file) {
 }
 
 /**
+ * Creates state entries from persisted task files.
+ * @param {Array} files
+ * @returns {Array}
+ */
+function createPersistedTaskFileEntries(files) {
+  return normalizePersistedTaskFiles(files).map((file, index) => {
+    return buildPersistedTaskFileEntry(file, index);
+  });
+}
+
+/**
+ * Builds a state entry for a persisted file.
+ * @param {Object} file
+ * @param {number} index
+ * @returns {Object}
+ */
+function buildPersistedTaskFileEntry(file, index) {
+  return {
+    id: buildPersistedTaskFileId(file, index),
+    name: file.name || "image",
+    type: file.type || "image/jpeg",
+    size: file.size || 0,
+    width: file.width || 0,
+    height: file.height || 0,
+    base64: String(file.base64 || ""),
+    previewUrl: String(file.base64 || ""),
+  };
+}
+
+/**
+ * Builds an id for a persisted task file.
+ * @param {Object} file
+ * @param {number} index
+ * @returns {string}
+ */
+function buildPersistedTaskFileId(file, index) {
+  return `saved-${index}-${file?.name || "image"}`;
+}
+
+/**
  * Renders the task file list.
  * @param {Object} state
  */
@@ -255,6 +295,7 @@ function clearTaskFileEntries(files) {
  */
 function revokeTaskFilePreview(entry) {
   if (!entry?.previewUrl) return;
+  if (!String(entry.previewUrl).startsWith("blob:")) return;
   URL.revokeObjectURL(entry.previewUrl);
 }
 

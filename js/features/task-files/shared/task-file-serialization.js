@@ -17,6 +17,7 @@ async function serializeTaskFiles(files) {
  * @returns {Promise<Object>}
  */
 async function serializeTaskFile(file) {
+  if (file?.base64) return normalizePersistedTaskFile(file);
   return {
     name: file.name || "image",
     type: file.type || "image/jpeg",
@@ -62,6 +63,22 @@ function mergePersistedTaskFiles(existingFiles, newFiles) {
 function normalizePersistedTaskFiles(files) {
   if (!Array.isArray(files)) return [];
   return files.filter((file) => file && file.base64);
+}
+
+/**
+ * Normalizes one persisted task file.
+ * @param {Object} file
+ * @returns {Object}
+ */
+function normalizePersistedTaskFile(file) {
+  return {
+    name: file.name || "image",
+    type: file.type || "image/jpeg",
+    size: file.size || 0,
+    width: file.width || 0,
+    height: file.height || 0,
+    base64: String(file.base64 || ""),
+  };
 }
 
 /**
@@ -114,4 +131,3 @@ function getTaskBase64Padding(value) {
   if (value.endsWith("=")) return 1;
   return 0;
 }
-
