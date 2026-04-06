@@ -9,18 +9,38 @@ function initTaskFileUpload(state) {
   state.selectedFiles = Array.isArray(state.selectedFiles)
     ? state.selectedFiles
     : [];
-  state.fileInput.addEventListener("change", () => handleTaskFileChange(state));
+  state.fileInput.addEventListener("change", () => queueTaskFileChange(state));
   renderTaskFilePreview(state);
+}
+
+/**
+ * Queues file input changes.
+ * @param {Object} state
+ */
+function queueTaskFileChange(state) {
+  state.fileUploadPending = handleTaskFileChange(state).finally(() => {
+    state.fileUploadPending = null;
+  });
 }
 
 /**
  * Handles file input changes.
  * @param {Object} state
+ * @returns {Promise<void>}
  */
-function handleTaskFileChange(state) {
+async function handleTaskFileChange(state) {
   const files = Array.from(state.fileInput?.files || []);
   if (files.length === 0) return;
-  appendTaskFiles(state, files);
+  clearTaskFileError(state);
+  setTaskFileUploadBusy(state, true);
+  try {
+    await appendTaskFiles(state, files);
+  } catch (error) {
+    console.error("Task file processing failed:", error);
+    showTaskFileError(state, "The selected image could not be processed.");
+  } finally {
+    setTaskFileUploadBusy(state, false);
+  }
   state.fileInput.value = "";
   renderTaskFilePreview(state);
 }
@@ -29,20 +49,37 @@ function handleTaskFileChange(state) {
  * Appends new files to the state.
  * @param {Object} state
  * @param {File[]} files
+ * @returns {Promise<void>}
  */
-function appendTaskFiles(state, files) {
-  files.forEach((file) => appendTaskFile(state, file));
+async function appendTaskFiles(state, files) {
+  const typeError = validateTaskFileTypes(files);
+  if (typeError) return showTaskFileError(state, typeError);
+  const processedFiles = await processTaskFiles(files);
+  const newFiles = filterNewTaskFiles(state.selectedFiles, processedFiles);
+  if (newFiles.length === 0) return;
+  if (exceedsTaskFileUploadLimit(state.selectedFiles, newFiles)) {
+    clearTaskFileEntries(newFiles);
+    return showTaskFileError(state, getTaskFileLimitErrorMessage());
+  }
+  newFiles.forEach((entry) => state.selectedFiles.push(entry));
 }
 
 /**
- * Appends a single file if it is not already present.
- * @param {Object} state
- * @param {File} file
+ * Filters out already selected files.
+ * @param {Array} selectedFiles
+ * @param {Array} nextFiles
+ * @returns {Array}
  */
-function appendTaskFile(state, file) {
-  const fileId = buildTaskFileId(file);
-  if (hasTaskFile(state.selectedFiles, fileId)) return;
-  state.selectedFiles.push(createTaskFileEntry(file, fileId));
+function filterNewTaskFiles(selectedFiles, nextFiles) {
+  const acceptedFiles = [];
+  (nextFiles || []).forEach((entry) => {
+    if (hasTaskFile(selectedFiles, entry.sourceId)) {
+      revokeTaskFilePreview(entry);
+      return;
+    }
+    acceptedFiles.push(createTaskFileEntry(entry));
+  });
+  return acceptedFiles;
 }
 
 /**
@@ -57,25 +94,21 @@ function hasTaskFile(files, fileId) {
 
 /**
  * Creates a state entry for a selected file.
- * @param {File} file
- * @param {string} fileId
+ * @param {Object} file
  * @returns {Object}
  */
-function createTaskFileEntry(file, fileId) {
+function createTaskFileEntry(file) {
   return {
-    id: fileId,
-    file,
-    previewUrl: URL.createObjectURL(file),
+    id: file.sourceId,
+    sourceId: file.sourceId,
+    name: file.name,
+    type: file.type,
+    size: file.size,
+    width: file.width,
+    height: file.height,
+    blob: file.blob,
+    previewUrl: URL.createObjectURL(file.blob),
   };
-}
-
-/**
- * Builds a stable id for a file.
- * @param {File} file
- * @returns {string}
- */
-function buildTaskFileId(file) {
-  return [file.name, file.size, file.lastModified, file.type].join("__");
 }
 
 /**
@@ -131,8 +164,8 @@ function buildTaskFileAvatar(entry) {
   const avatar = document.createElement("span");
   const image = document.createElement("img");
   avatar.className = "file-upload-avatar";
-  avatar.title = entry.file?.name || "Uploaded image";
-  avatar.setAttribute("aria-label", entry.file?.name || "Uploaded image");
+  avatar.title = entry.name || "Uploaded image";
+  avatar.setAttribute("aria-label", entry.name || "Uploaded image");
   image.src = entry.previewUrl;
   image.alt = "";
   image.loading = "lazy";
@@ -162,6 +195,7 @@ function clearTaskFileUpload(state) {
   clearTaskFileEntries(state?.selectedFiles || []);
   if (state) state.selectedFiles = [];
   if (state?.fileInput) state.fileInput.value = "";
+  clearTaskFileError(state);
   renderTaskFilePreview(state);
 }
 
@@ -180,4 +214,44 @@ function clearTaskFileEntries(files) {
 function revokeTaskFilePreview(entry) {
   if (!entry?.previewUrl) return;
   URL.revokeObjectURL(entry.previewUrl);
+}
+
+/**
+ * Waits for the current file processing task.
+ * @param {Object} state
+ * @returns {Promise<void>}
+ */
+async function waitForTaskFileUpload(state) {
+  if (!state?.fileUploadPending) return;
+  await state.fileUploadPending;
+}
+
+/**
+ * Shows a task file field error.
+ * @param {Object} state
+ * @param {string} message
+ */
+function showTaskFileError(state, message) {
+  state.fileError = message || "";
+  showFieldError("task-files-error", state.fileError, state.fileTrigger);
+}
+
+/**
+ * Clears the task file field error.
+ * @param {Object} state
+ */
+function clearTaskFileError(state) {
+  if (!state) return;
+  state.fileError = "";
+  clearFieldError("task-files-error", state.fileTrigger);
+}
+
+/**
+ * Toggles the task file upload busy state.
+ * @param {Object} state
+ * @param {boolean} busy
+ */
+function setTaskFileUploadBusy(state, busy) {
+  if (!state?.fileInput) return;
+  state.fileInput.disabled = busy;
 }

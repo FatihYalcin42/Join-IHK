@@ -59,6 +59,7 @@ function attachMainInputs(state) {
   state.titleInput = document.getElementById("task-title");
   state.dueDateInput = document.getElementById("task-due-date");
   state.fileInput = document.getElementById("task-files");
+  state.fileTrigger = state.form?.querySelector(".file-upload-trigger");
   state.filePreview = state.form?.querySelector("[data-task-file-preview]");
   state.categoryInput = document.getElementById("task-category-value");
   state.categoryDropdown = document.getElementById("category-dropdown");
@@ -66,6 +67,8 @@ function attachMainInputs(state) {
     "[data-category-toggle]",
   );
   state.formMsg = document.getElementById("add-task-form-msg");
+  state.fileError = "";
+  state.fileUploadPending = null;
 }
 
 /**

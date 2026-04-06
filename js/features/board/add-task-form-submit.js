@@ -19,7 +19,7 @@ function wireSubmitHandler(state, onClose) {
  * Handles the submit flow.
  */
 async function handleSubmit(state, onClose) {
-  const values = validateTaskForm(state);
+  const values = await validateTaskForm(state);
   if (!values) return;
   await submitTaskForm(state, values, onClose);
 }

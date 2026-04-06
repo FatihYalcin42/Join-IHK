@@ -42,10 +42,13 @@ function wireValidationCleanup(state) {
  * Validates the task form.
  * @returns {Object|null}
  */
-function validateTaskForm(state) {
+async function validateTaskForm(state) {
+  await waitForTaskFileUpload(state);
+  const fileError = state.fileError || "";
   clearAddTaskErrors(state);
+  if (fileError) showTaskFileError(state, fileError);
   const values = getTaskFormValues(state);
-  const error = getTaskValidationError(values);
+  const error = getTaskValidationError(state, values);
   if (!error) return values;
   showAddTaskError(state, values, error);
   return null;
@@ -55,10 +58,11 @@ function validateTaskForm(state) {
  * Returns a validation error message.
  * @returns {string}
  */
-function getTaskValidationError(values) {
+function getTaskValidationError(state, values) {
   if (!values.title) return "Please enter a title.";
   if (!values.dueDate) return "Please select a due date.";
   if (!values.category) return "Please select a category.";
+  if (state.fileError) return state.fileError;
   return "";
 }
 
@@ -85,6 +89,7 @@ function markMissingTaskFields(state, values) {
   if (!values.title) addInputError(state.titleInput);
   if (!values.dueDate) addInputError(state.dueDateInput);
   if (!values.category) addInputError(state.categoryToggle);
+  if (state.fileError) addInputError(state.fileTrigger);
 }
 
 /**
@@ -101,6 +106,7 @@ function clearAddTaskErrors(state) {
   setAddTaskFormMsg(state, "");
   clearInputError(state.dueDateInput);
   clearInputError(state.categoryToggle);
+  clearTaskFileError(state);
 }
 
 /**

@@ -156,7 +156,7 @@ function getAddTaskFileUploadBlock() {
         id="task-files"
         class="file-upload-native"
         type="file"
-        accept="image/png,image/jpeg,image/webp,image/gif"
+        accept="image/png,image/jpeg,image/webp"
         multiple
       />
       <label for="task-files" class="file-upload-trigger">
