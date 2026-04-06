@@ -20,12 +20,14 @@
   left: 50%;
   transform: translate(-50%, -50%);
   width: min(960px, calc(100vw - 32px));
-  max-height: calc(100vh - 32px);
+  height: min(760px, calc(100vh - 32px));
   background: var(--color-bg-surface);
   border-radius: 28px;
   padding: 24px;
   box-sizing: border-box;
-  overflow: auto;
+  overflow: hidden;
+  display: grid;
+  grid-template-rows: minmax(0, 1fr) auto;
 }
 
 .task-file-viewer-close {
@@ -49,10 +51,12 @@
   grid-template-columns: 48px minmax(0, 1fr) 48px;
   gap: 12px;
   align-items: center;
+  min-height: 0;
 }
 
 .task-file-viewer-image-wrap {
-  min-height: 320px;
+  height: 100%;
+  min-height: 0;
   border-radius: 24px;
   background: #f2f4f7;
   display: grid;
@@ -63,7 +67,7 @@
 .task-file-viewer-image {
   display: block;
   width: 100%;
-  max-height: 70vh;
+  height: 100%;
   object-fit: contain;
 }
 
@@ -90,6 +94,7 @@
   display: grid;
   gap: 10px;
   margin-top: 18px;
+  align-content: start;
 }
 
 .task-file-viewer-meta-main,
@@ -132,7 +137,6 @@
   .task-file-viewer-panel {
     width: 100vw;
     height: 100vh;
-    max-height: none;
     border-radius: 0;
     padding: 20px 16px 24px;
   }
