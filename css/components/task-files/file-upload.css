@@ -61,7 +61,8 @@
 }
 
 .file-upload-item {
-  display: flex;
+  display: grid;
+  grid-template-columns: 24px minmax(0, 1fr) 24px;
   align-items: center;
   gap: 10px;
   width: 100%;
@@ -71,6 +72,7 @@
   border-radius: 10px;
   background: transparent;
   box-sizing: border-box;
+  min-width: 0;
 }
 
 .file-upload-item:hover {
@@ -102,8 +104,9 @@
 }
 
 .file-upload-name {
-  flex: 1;
+  display: block;
   min-width: 0;
+  max-width: 100%;
   color: var(--color-text-primary);
   font-size: 16px;
   line-height: 1.35;
