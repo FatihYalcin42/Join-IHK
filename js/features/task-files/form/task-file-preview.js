@@ -198,7 +198,6 @@ function buildTaskFileDeleteButton(state, entry) {
   button.type = "button";
   button.className = "file-upload-action";
   button.setAttribute("aria-label", `Remove file ${entry.name || "image"}`);
-  button.title = `Remove ${entry.name || "image"}`;
   icon.src = "/assets/img/icons/delete.svg";
   icon.alt = "";
   icon.setAttribute("aria-hidden", "true");
