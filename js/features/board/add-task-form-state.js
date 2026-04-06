@@ -34,6 +34,7 @@ function initAddTaskState(form, options) {
     selectedPrio: "medium",
     selectedCategory: "",
     selectedAssigned: [],
+    selectedFiles: [],
     selectedSubtasks: [],
     editingIndex: null,
     editingValue: "",
@@ -57,6 +58,8 @@ function attachMainInputs(state) {
   state.createBtn = document.getElementById("create-btn");
   state.titleInput = document.getElementById("task-title");
   state.dueDateInput = document.getElementById("task-due-date");
+  state.fileInput = document.getElementById("task-files");
+  state.filePreview = state.form?.querySelector("[data-task-file-preview]");
   state.categoryInput = document.getElementById("task-category-value");
   state.categoryDropdown = document.getElementById("category-dropdown");
   state.categoryToggle = state.categoryDropdown?.querySelector(
@@ -83,6 +86,7 @@ function attachSubtaskInputs(state) {
 async function setupAddTaskForm(state, onClose) {
   setDueDateMin(state.dueDateInput);
   wirePrioButtons(state);
+  initTaskFileUpload(state);
   applyEditDefaults(state);
   const resets = initDropdowns(state);
   initSubtasks(state);

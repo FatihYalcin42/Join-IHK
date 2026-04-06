@@ -45,6 +45,7 @@ function clearAddTaskForm(state, resets) {
   clearSubtaskLimitState();
   resetStatusPreset();
   resetPrioSelection(state);
+  clearTaskFileUpload(state);
   resetSelectionState(state);
   clearCategoryInput(state);
   resets.resetCategoryUi?.();
