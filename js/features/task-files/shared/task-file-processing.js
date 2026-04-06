@@ -126,7 +126,7 @@ function convertCanvasToBlob(canvas, type, quality) {
 function buildProcessedTaskFile(file, blob, size, type) {
   return {
     sourceId: buildTaskSourceId(file),
-    name: buildTaskFileName(file.name, type),
+    name: buildProcessedTaskFileName(file.name, type),
     type,
     size: blob.size,
     width: size.width,
@@ -150,7 +150,7 @@ function buildTaskSourceId(file) {
  * @param {string} type
  * @returns {string}
  */
-function buildTaskFileName(name, type) {
+function buildProcessedTaskFileName(name, type) {
   const baseName = String(name || "image").replace(/\.[^.]+$/, "");
   return `${baseName}.${getTaskFileExtension(type)}`;
 }

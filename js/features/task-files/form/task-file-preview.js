@@ -150,7 +150,7 @@ function buildTaskFileRow(state, entry) {
   const row = document.createElement("div");
   row.className = "file-upload-item";
   row.appendChild(buildTaskFileAvatar(entry));
-  row.appendChild(buildTaskFileName(entry));
+  row.appendChild(buildTaskFileNameElement(entry));
   row.appendChild(buildTaskFileDeleteButton(state, entry));
   return row;
 }
@@ -178,7 +178,7 @@ function buildTaskFileAvatar(entry) {
  * @param {Object} entry
  * @returns {HTMLElement}
  */
-function buildTaskFileName(entry) {
+function buildTaskFileNameElement(entry) {
   const name = document.createElement("span");
   name.className = "file-upload-name";
   name.textContent = entry.name || "Image";

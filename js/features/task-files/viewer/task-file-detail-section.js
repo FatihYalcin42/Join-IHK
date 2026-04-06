@@ -81,7 +81,7 @@ function buildTaskFileThumb(file, index) {
 function buildTaskFileMeta(file) {
   const meta = document.createElement("div");
   meta.className = "task-detail-file-meta";
-  meta.appendChild(buildTaskFileName(file));
+  meta.appendChild(buildTaskDetailFileName(file));
   meta.appendChild(buildTaskFileInfo(file));
   return meta;
 }
@@ -91,7 +91,7 @@ function buildTaskFileMeta(file) {
  * @param {Object} file
  * @returns {HTMLElement}
  */
-function buildTaskFileName(file) {
+function buildTaskDetailFileName(file) {
   const name = document.createElement("span");
   name.className = "task-detail-file-name";
   name.textContent = file.name || "Image";
@@ -142,4 +142,3 @@ function formatTaskFileSize(size) {
   if (bytes >= 1024 * 1024) return `${(bytes / (1024 * 1024)).toFixed(1)} MB`;
   return `${Math.max(1, Math.round(bytes / 1024))} KB`;
 }
-
