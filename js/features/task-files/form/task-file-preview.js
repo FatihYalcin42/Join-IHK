@@ -1,5 +1,3 @@
-const MAX_TASK_FILE_PREVIEWS = 3;
-
 /**
  * Initializes the file upload preview for the add-task form.
  * @param {Object} state
@@ -112,15 +110,14 @@ function createTaskFileEntry(file) {
 }
 
 /**
- * Renders file preview avatars.
+ * Renders the task file list.
  * @param {Object} state
  */
 function renderTaskFilePreview(state) {
   if (!state?.filePreview) return;
   const files = state.selectedFiles || [];
   clearTaskFilePreviewElement(state.filePreview);
-  appendTaskFilePreviewItems(state.filePreview, files);
-  appendTaskFilePreviewMore(state.filePreview, files.length);
+  appendTaskFilePreviewItems(state, state.filePreview, files);
   state.filePreview.hidden = files.length === 0;
 }
 
@@ -134,29 +131,32 @@ function clearTaskFilePreviewElement(preview) {
 }
 
 /**
- * Appends visible preview items.
+ * Appends all visible file rows.
+ * @param {Object} state
  * @param {HTMLElement} preview
  * @param {Array} files
  */
-function appendTaskFilePreviewItems(preview, files) {
-  files
-    .slice(0, MAX_TASK_FILE_PREVIEWS)
-    .forEach((entry) => preview.appendChild(buildTaskFileAvatar(entry)));
+function appendTaskFilePreviewItems(state, preview, files) {
+  files.forEach((entry) => preview.appendChild(buildTaskFileRow(state, entry)));
 }
 
 /**
- * Appends the more badge if needed.
- * @param {HTMLElement} preview
- * @param {number} total
+ * Builds one file row.
+ * @param {Object} state
+ * @param {Object} entry
+ * @returns {HTMLElement}
  */
-function appendTaskFilePreviewMore(preview, total) {
-  if (total <= MAX_TASK_FILE_PREVIEWS) return;
-  const extra = total - MAX_TASK_FILE_PREVIEWS;
-  preview.appendChild(buildTaskFileMoreBadge(extra));
+function buildTaskFileRow(state, entry) {
+  const row = document.createElement("div");
+  row.className = "file-upload-item";
+  row.appendChild(buildTaskFileAvatar(entry));
+  row.appendChild(buildTaskFileName(entry));
+  row.appendChild(buildTaskFileDeleteButton(state, entry));
+  return row;
 }
 
 /**
- * Builds an avatar for one file preview.
+ * Builds an avatar for one file.
  * @param {Object} entry
  * @returns {HTMLElement}
  */
@@ -174,17 +174,60 @@ function buildTaskFileAvatar(entry) {
 }
 
 /**
- * Builds the extra-files badge.
- * @param {number} count
+ * Builds the file name element.
+ * @param {Object} entry
  * @returns {HTMLElement}
  */
-function buildTaskFileMoreBadge(count) {
-  const badge = document.createElement("span");
-  badge.className = "file-upload-avatar file-upload-avatar--more";
-  badge.textContent = `+${count}`;
-  badge.title = `${count} more files`;
-  badge.setAttribute("aria-label", `${count} more files`);
-  return badge;
+function buildTaskFileName(entry) {
+  const name = document.createElement("span");
+  name.className = "file-upload-name";
+  name.textContent = entry.name || "Image";
+  name.title = entry.name || "Image";
+  return name;
+}
+
+/**
+ * Builds the delete button for a file row.
+ * @param {Object} state
+ * @param {Object} entry
+ * @returns {HTMLElement}
+ */
+function buildTaskFileDeleteButton(state, entry) {
+  const button = document.createElement("button");
+  const icon = document.createElement("img");
+  button.type = "button";
+  button.className = "file-upload-action";
+  button.setAttribute("aria-label", `Remove file ${entry.name || "image"}`);
+  button.title = `Remove ${entry.name || "image"}`;
+  icon.src = "/assets/img/icons/delete.svg";
+  icon.alt = "";
+  icon.setAttribute("aria-hidden", "true");
+  button.appendChild(icon);
+  button.addEventListener("click", () => removeTaskFile(state, entry.id));
+  return button;
+}
+
+/**
+ * Removes a selected task file.
+ * @param {Object} state
+ * @param {string} fileId
+ */
+function removeTaskFile(state, fileId) {
+  const index = findTaskFileIndex(state.selectedFiles, fileId);
+  if (index < 0) return;
+  revokeTaskFilePreview(state.selectedFiles[index]);
+  state.selectedFiles.splice(index, 1);
+  renderTaskFilePreview(state);
+}
+
+/**
+ * Finds a task file index by id.
+ * @param {Array} files
+ * @param {string} fileId
+ * @returns {number}
+ */
+function findTaskFileIndex(files, fileId) {
+  return (files || []).findIndex((entry) => entry?.id === fileId);
 }
 
 /**
