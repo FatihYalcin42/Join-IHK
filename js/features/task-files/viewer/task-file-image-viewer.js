@@ -160,7 +160,9 @@ function updateTaskViewerDownload(root, file) {
  * @returns {string}
  */
 function getTaskViewerSource(file) {
-  return String(file?.base64 || file?.previewUrl || "");
+  return typeof getTaskFileSource === "function"
+    ? getTaskFileSource(file)
+    : String(file?.base64 || file?.previewUrl || "");
 }
 
 /**

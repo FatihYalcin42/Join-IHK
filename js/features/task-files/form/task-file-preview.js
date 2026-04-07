@@ -127,6 +127,7 @@ function createPersistedTaskFileEntries(files) {
  * @returns {Object}
  */
 function buildPersistedTaskFileEntry(file, index) {
+  const source = getTaskFileSource(file);
   return {
     id: buildPersistedTaskFileId(file, index),
     name: file.name || "image",
@@ -134,8 +135,8 @@ function buildPersistedTaskFileEntry(file, index) {
     size: file.size || 0,
     width: file.width || 0,
     height: file.height || 0,
-    base64: String(file.base64 || ""),
-    previewUrl: String(file.base64 || ""),
+    base64: source,
+    previewUrl: source,
   };
 }
 
@@ -219,10 +220,12 @@ function buildTaskFilePreviewButton(state, entry) {
 function buildTaskFileAvatar(entry) {
   const avatar = document.createElement("span");
   const image = document.createElement("img");
+  const source = getTaskFileSource(entry);
   avatar.className = "file-upload-avatar";
   avatar.title = entry.name || "Uploaded image";
   avatar.setAttribute("aria-label", entry.name || "Uploaded image");
-  image.src = entry.previewUrl;
+  if (source) image.src = source;
+  else image.hidden = true;
   image.alt = "";
   image.loading = "lazy";
   avatar.appendChild(image);

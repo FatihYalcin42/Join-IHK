@@ -16,7 +16,7 @@ function createTaskFilesSection(task) {
  */
 function getTaskDetailFiles(task) {
   if (!Array.isArray(task?.files)) return [];
-  return task.files.filter((file) => file?.base64);
+  return task.files.filter((file) => getTaskFileSource(file));
 }
 
 /**
@@ -91,8 +91,9 @@ function buildTaskFilePreviewButton(files, file, index) {
 function buildTaskFileDownloadButton(file) {
   const link = document.createElement("a");
   const icon = document.createElement("img");
+  const source = getTaskFileSource(file);
   link.className = "task-detail-file-download";
-  link.href = file.base64 || "#";
+  link.href = source || "#";
   link.download = file.name || "image";
   link.setAttribute("aria-label", `Download file ${file.name || "image"}`);
   icon.src = "/assets/img/icons/ckbehera-download-6155763.svg";
@@ -110,8 +111,9 @@ function buildTaskFileDownloadButton(file) {
  */
 function buildTaskFileThumb(file, index) {
   const image = document.createElement("img");
+  const source = getTaskFileSource(file);
   image.className = "task-detail-file-thumb";
-  image.src = file.base64;
+  if (source) image.src = source;
   image.alt = file.name || `Task file ${index + 1}`;
   image.loading = "lazy";
   return image;

@@ -17,7 +17,7 @@ async function serializeTaskFiles(files) {
  * @returns {Promise<Object>}
  */
 async function serializeTaskFile(file) {
-  if (file?.base64) return normalizePersistedTaskFile(file);
+  if (hasValidTaskFileSource(file?.base64)) return normalizePersistedTaskFile(file);
   return {
     name: file.name || "image",
     type: file.type || "image/jpeg",
@@ -62,7 +62,7 @@ function mergePersistedTaskFiles(existingFiles, newFiles) {
  */
 function normalizePersistedTaskFiles(files) {
   if (!Array.isArray(files)) return [];
-  return files.filter((file) => file && file.base64);
+  return files.filter((file) => file && hasValidTaskFileSource(file.base64));
 }
 
 /**
@@ -77,8 +77,38 @@ function normalizePersistedTaskFile(file) {
     size: file.size || 0,
     width: file.width || 0,
     height: file.height || 0,
-    base64: String(file.base64 || ""),
+    base64: normalizeTaskFileSource(file.base64),
   };
+}
+
+/**
+ * Returns a normalized task file source string.
+ * @param {any} value
+ * @returns {string}
+ */
+function normalizeTaskFileSource(value) {
+  const source = String(value ?? "").trim();
+  if (!source) return "";
+  if (source === "undefined" || source === "null") return "";
+  return source;
+}
+
+/**
+ * Returns whether a source string is valid for file previews/downloads.
+ * @param {any} value
+ * @returns {boolean}
+ */
+function hasValidTaskFileSource(value) {
+  return normalizeTaskFileSource(value).length > 0;
+}
+
+/**
+ * Returns the preferred display source for a task file.
+ * @param {Object} file
+ * @returns {string}
+ */
+function getTaskFileSource(file) {
+  return normalizeTaskFileSource(file?.base64 || file?.previewUrl);
 }
 
 /**
