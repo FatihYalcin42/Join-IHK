@@ -188,7 +188,7 @@ function appendTaskFilePreviewItems(state, preview, files) {
  * @returns {HTMLElement}
  */
 function buildTaskFileRow(state, entry) {
-  const row = document.createElement("div");
+  const row = document.createElement("li");
   row.className = "file-upload-item";
   row.appendChild(buildTaskFileRowPreviewButton(state, entry));
   row.appendChild(buildTaskFileDeleteButton(state, entry));

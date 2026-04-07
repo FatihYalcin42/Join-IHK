@@ -55,9 +55,10 @@
   display: grid;
   gap: 8px;
   margin: 8px 0 4px;
+  padding: 0 4px 0 0;
+  list-style: none;
   max-height: 88px;
   overflow-y: auto;
-  padding-right: 4px;
 }
 
 .file-upload-item {
@@ -73,6 +74,7 @@
   background: transparent;
   box-sizing: border-box;
   min-width: 0;
+  list-style: none;
 }
 
 .file-upload-item-preview {

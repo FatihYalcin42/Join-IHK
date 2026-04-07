@@ -25,8 +25,9 @@ function getTaskDetailFiles(task) {
  * @returns {HTMLElement}
  */
 function buildTaskFilesSection(files) {
-  const section = document.createElement("div");
+  const section = document.createElement("section");
   section.className = "task-detail-section";
+  section.setAttribute("aria-label", "Files");
   section.appendChild(createSectionLabel("Files:"));
   section.appendChild(buildTaskFilesList(files));
   return section;
@@ -38,7 +39,7 @@ function buildTaskFilesSection(files) {
  * @returns {HTMLElement}
  */
 function buildTaskFilesList(files) {
-  const list = document.createElement("div");
+  const list = document.createElement("ul");
   list.className = "task-detail-files";
   files.forEach((file, index) => {
     list.appendChild(buildTaskFileItem(files, file, index));
@@ -54,7 +55,7 @@ function buildTaskFilesList(files) {
  * @returns {HTMLElement}
  */
 function buildTaskFileItem(files, file, index) {
-  const item = document.createElement("div");
+  const item = document.createElement("li");
   item.className = "task-detail-file";
   item.appendChild(buildTaskFilePreviewButton(files, file, index));
   item.appendChild(buildTaskFileDownloadButton(file));

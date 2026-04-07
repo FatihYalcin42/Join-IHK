@@ -169,7 +169,7 @@ function getAddTaskFileUploadBlock() {
         />
       </label>
     </div>
-    <div class="file-upload-preview" data-task-file-preview hidden></div>
+    <ul class="file-upload-preview" data-task-file-preview hidden></ul>
     <div class="field-error" id="task-files-error"></div>
   `;
 }
