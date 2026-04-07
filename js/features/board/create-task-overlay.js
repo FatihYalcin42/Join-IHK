@@ -24,6 +24,9 @@ function openTaskOverlayRoot() {
   return root;
 }
 
+/**
+ * Closes the task detail overlay and viewer state.
+ */
 function closeTaskOverlay() {
   if (typeof closeTaskFileViewer === "function") closeTaskFileViewer();
   const root = document.getElementById("overlayRoot");

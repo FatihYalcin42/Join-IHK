@@ -63,6 +63,10 @@ function wireConfirmOverlay(overlay, done) {
   overlay.focus();
 }
 
+/**
+ * Removes the confirm overlay from the DOM.
+ * @param {HTMLElement} overlay - The overlay element
+ */
 function closeConfirmOverlay(overlay) {
   overlay.remove();
 }

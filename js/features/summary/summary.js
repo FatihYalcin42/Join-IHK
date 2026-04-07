@@ -179,6 +179,10 @@ function renderKPIs(kpiData) {
   );
 }
 
+/**
+ * Initializes the summary page for the current user.
+ * @returns {Promise<void>}
+ */
 async function initSummary() {
   const user = loadCurrentUser();
   if (!user) return redirectToLogin();
@@ -188,11 +192,18 @@ async function initSummary() {
   onPageVisible(reloadSummaryData);
 }
 
+/**
+ * Reloads task data and re-renders the summary KPIs.
+ * @returns {Promise<void>}
+ */
 async function reloadSummaryData() {
   const tasks = await loadTasks();
   renderKPIs(calcKPIs(tasks));
 }
 
+/**
+ * Redirects unauthenticated users to the login page.
+ */
 function redirectToLogin() {
   window.location.href = ROUTES.LOGIN;
 }
@@ -217,6 +228,9 @@ function shouldShowMobileGreeting() {
   return window.innerWidth <= 480 && sessionStorage.getItem("mobileGreetingShown") !== "true";
 }
 
+/**
+ * Persists that the mobile greeting has already been shown.
+ */
 function markMobileGreetingShown() {
   sessionStorage.setItem("mobileGreetingShown", "true");
 }
@@ -258,10 +272,17 @@ function showGreetingOverlay(overlay) {
 // Start summary init when the DOM is ready.
 document.addEventListener("DOMContentLoaded", handleSummaryReady);
 
+/**
+ * Defers summary initialization until shared page setup has finished.
+ */
 function handleSummaryReady() {
   withPageReady(runSummaryInit);
 }
 
+/**
+ * Runs summary initialization with error logging.
+ * @returns {Promise<void>}
+ */
 async function runSummaryInit() {
   await initSummary().catch((err) => {
     console.error("Summary init error:", err);

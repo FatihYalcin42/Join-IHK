@@ -36,6 +36,9 @@ function skipAnimation(img, bg) {
   bg.style.display = "none";
 }
 
+/**
+ * Initializes the intro animation on the auth screens.
+ */
 function initAnimation() {
   const img = document.getElementById("img-animation");
   const bg = document.getElementById("bg");
@@ -49,6 +52,9 @@ function initAnimation() {
   setTimeout(() => startAnimation(img, bg), 200);
 }
 
+/**
+ * Displays the signup success overlay when available.
+ */
 function showSuccessOverlay() {
   const overlay = document.getElementById("success-overlay");
   if (overlay) overlay.style.display = "flex";
@@ -57,10 +63,16 @@ function showSuccessOverlay() {
 // DOMContentLoaded listener for auth init.
 document.addEventListener("DOMContentLoaded", handleAuthReady);
 
+/**
+ * Defers auth initialization until shared page setup has finished.
+ */
 function handleAuthReady() {
   withPageReady(runAuthInit);
 }
 
+/**
+ * Initializes shared auth page behavior.
+ */
 function runAuthInit() {
   initAnimation();
   initLogin();

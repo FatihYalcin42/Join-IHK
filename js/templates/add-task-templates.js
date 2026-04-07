@@ -6,28 +6,50 @@ function getAddTaskPriorityBlockTemplate() {
   return `
     <label>Priority</label>
     <div class="prio-row">
-      <button type="button" class="prio-btn" data-prio="urgent">
-        <span class="prio-label">Urgent</span>
-        <svg class="prio-icon" viewBox="0 0 20 16" aria-hidden="true">
-          <path d="M4 10L10 4L16 10" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
-          <path d="M4 14L10 8L16 14" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
-        </svg>
-      </button>
-      <button type="button" class="prio-btn is-active" data-prio="medium">
-        <span class="prio-label">Medium</span>
-        <svg class="prio-icon" viewBox="0 0 20 16" aria-hidden="true">
-          <path d="M4 6H16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" />
-          <path d="M4 10H16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" />
-        </svg>
-      </button>
-      <button type="button" class="prio-btn" data-prio="low">
-        <span class="prio-label">Low</span>
-        <svg class="prio-icon" viewBox="0 0 20 16" aria-hidden="true">
-          <path d="M4 2L10 8L16 2" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
-          <path d="M4 6L10 12L16 6" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
-        </svg>
-      </button>
+      ${getAddTaskPriorityButtonTemplate("urgent", "Urgent", "M4 10L10 4L16 10", "M4 14L10 8L16 14")}
+      ${getAddTaskPriorityButtonTemplate("medium", "Medium", "M4 6H16", "M4 10H16", true)}
+      ${getAddTaskPriorityButtonTemplate("low", "Low", "M4 2L10 8L16 2", "M4 6L10 12L16 6")}
     </div>
+  `;
+}
+
+/**
+ * Builds a priority button template.
+ * @param {string} value
+ * @param {string} label
+ * @param {string} primaryPath
+ * @param {string} secondaryPath
+ * @param {boolean} isActive
+ * @returns {string}
+ */
+function getAddTaskPriorityButtonTemplate(
+  value,
+  label,
+  primaryPath,
+  secondaryPath,
+  isActive = false,
+) {
+  const classes = isActive ? "prio-btn is-active" : "prio-btn";
+  return `
+      <button type="button" class="${classes}" data-prio="${value}">
+        <span class="prio-label">${label}</span>
+        ${getAddTaskPriorityIconTemplate(primaryPath, secondaryPath)}
+      </button>
+  `;
+}
+
+/**
+ * Builds the priority icon template.
+ * @param {string} primaryPath
+ * @param {string} secondaryPath
+ * @returns {string}
+ */
+function getAddTaskPriorityIconTemplate(primaryPath, secondaryPath) {
+  return `
+        <svg class="prio-icon" viewBox="0 0 20 16" aria-hidden="true">
+          <path d="${primaryPath}" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
+          <path d="${secondaryPath}" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
+        </svg>
   `;
 }
 
@@ -152,6 +174,20 @@ function getAddTaskFileUploadBlock() {
   return `
     <label for="task-files">Files</label>
     <div class="file-upload-field">
+      ${getAddTaskFileInputTemplate()}
+      ${getAddTaskFileTriggerTemplate()}
+    </div>
+    <ul class="file-upload-preview" data-task-file-preview hidden></ul>
+    <div class="field-error" id="task-files-error"></div>
+  `;
+}
+
+/**
+ * Builds the native file input HTML.
+ * @returns {string}
+ */
+function getAddTaskFileInputTemplate() {
+  return `
       <input
         id="task-files"
         class="file-upload-native"
@@ -159,18 +195,19 @@ function getAddTaskFileUploadBlock() {
         accept="image/png,image/jpeg,image/webp"
         multiple
       />
+  `;
+}
+
+/**
+ * Builds the styled file upload trigger HTML.
+ * @returns {string}
+ */
+function getAddTaskFileTriggerTemplate() {
+  return `
       <label for="task-files" class="file-upload-trigger">
         <span class="file-upload-placeholder">Upload images</span>
-        <img
-          class="file-upload-icon"
-          src="/assets/img/icons/plus-button-1.svg"
-          alt=""
-          aria-hidden="true"
-        />
+        <img class="file-upload-icon" src="/assets/img/icons/plus-button-1.svg" alt="" aria-hidden="true" />
       </label>
-    </div>
-    <ul class="file-upload-preview" data-task-file-preview hidden></ul>
-    <div class="field-error" id="task-files-error"></div>
   `;
 }
 
@@ -183,28 +220,29 @@ function getAddTaskSubtaskBlock() {
   <label>Subtasks</label>
   <div class="subtask-row">
     <div class="subtask-input-actions">
-      <button
-        type="button"
-        class="subtask-input-action"
-        data-subtask-input-action="clear"
-        aria-label="Clear subtask"
-      >
-        <img src="/assets/img/icons/delete.svg" alt="" aria-hidden="true" />
-      </button>
-      <button
-        type="button"
-        class="subtask-input-action"
-        data-subtask-input-action="save"
-        aria-label="Save subtask"
-      >
-        <img src="/assets/img/icons/done.svg" alt="" aria-hidden="true" />
-      </button>
+      ${getAddTaskSubtaskActionTemplate("clear", "Clear subtask", "/assets/img/icons/delete.svg")}
+      ${getAddTaskSubtaskActionTemplate("save", "Save subtask", "/assets/img/icons/done.svg")}
     </div>
     <input id="subtask-input" type="text" placeholder="Add new subtask" />
   </div>
   <div class="field-error" id="subtask-error"></div>
   <div id="subtask-list"></div>
 `;
+}
+
+/**
+ * Builds a subtask action button.
+ * @param {string} action
+ * @param {string} label
+ * @param {string} iconSrc
+ * @returns {string}
+ */
+function getAddTaskSubtaskActionTemplate(action, label, iconSrc) {
+  return `
+      <button type="button" class="subtask-input-action" data-subtask-input-action="${action}" aria-label="${label}">
+        <img src="${iconSrc}" alt="" aria-hidden="true" />
+      </button>
+  `;
 }
 
 /**
@@ -216,19 +254,28 @@ function getAddTaskFormFooter() {
       <div id="add-task-form-msg" class="form-msg" aria-live="polite"></div>
       <p class="req-note"><span class="req">*</span>This field is required</p>
       <div class="addtask-footer">
-        <button type="button" id="clear-btn">
-          <span class="btn-label">Clear</span>
-          <svg class="btn-icon" viewBox="0 0 16 16" aria-hidden="true">
-            <path d="M4 4L12 12M12 4L4 12" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" />
-          </svg>
-        </button>
-        <button type="submit" id="create-btn">
-          <span class="btn-label">Create Task</span>
-          <svg class="btn-icon" viewBox="0 0 16 16" aria-hidden="true">
-            <path d="M3 8L6 11L13 4" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
-          </svg>
-        </button>
+        ${getAddTaskFooterButtonTemplate("button", "clear-btn", "Clear", "M4 4L12 12M12 4L4 12")}
+        ${getAddTaskFooterButtonTemplate("submit", "create-btn", "Create Task", "M3 8L6 11L13 4")}
       </div>
+  `;
+}
+
+/**
+ * Builds a footer action button.
+ * @param {string} type
+ * @param {string} id
+ * @param {string} label
+ * @param {string} path
+ * @returns {string}
+ */
+function getAddTaskFooterButtonTemplate(type, id, label, path) {
+  return `
+        <button type="${type}" id="${id}">
+          <span class="btn-label">${label}</span>
+          <svg class="btn-icon" viewBox="0 0 16 16" aria-hidden="true">
+            <path d="${path}" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
+          </svg>
+        </button>
   `;
 }
 

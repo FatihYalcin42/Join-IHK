@@ -147,21 +147,38 @@ function wireContactCounters(elements) {
  * @param {Object} elements
  */
 function updateContactCounters(elements) {
-  enforceContactMax(elements.nameInput, CONTACT_NAME_MAX);
-  updateContactFieldCounter(
+  updateContactTextCounter(
     elements.nameInput,
     "contact-name-counter",
     CONTACT_NAME_MAX,
   );
-  enforceContactMax(elements.emailInput, CONTACT_EMAIL_MAX);
-  updateContactFieldCounter(
+  updateContactTextCounter(
     elements.emailInput,
     "contact-email-counter",
     CONTACT_EMAIL_MAX,
   );
-  trimPhoneToMaxDigits(elements.phoneInput, CONTACT_PHONE_MAX);
+  updateContactPhoneCounter(elements.phoneInput);
+}
+
+/**
+ * Updates a text input counter with max-length enforcement.
+ * @param {HTMLInputElement} input
+ * @param {string} counterId
+ * @param {number} max
+ */
+function updateContactTextCounter(input, counterId, max) {
+  enforceContactMax(input, max);
+  updateContactFieldCounter(input, counterId, max);
+}
+
+/**
+ * Updates the phone counter with digit trimming.
+ * @param {HTMLInputElement} input
+ */
+function updateContactPhoneCounter(input) {
+  trimPhoneToMaxDigits(input, CONTACT_PHONE_MAX);
   updateContactFieldCounter(
-    elements.phoneInput,
+    input,
     "contact-phone-counter",
     CONTACT_PHONE_MAX,
     getPhoneDigitsCount,

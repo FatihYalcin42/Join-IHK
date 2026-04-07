@@ -120,12 +120,18 @@ async function deleteContact(contactId) {
   }
 }
 
+/**
+ * Renders the current contact list into the sidebar.
+ */
 function updateContactList() {
   const listElement = document.querySelector(".contact-list");
   if (!listElement) return;
   renderContactList(listElement, getContactData());
 }
 
+/**
+ * Clears the current contact detail view and mobile detail state.
+ */
 function clearContactDetail() {
   const container = document.getElementById("contact-detail-injection");
   if (container) container.innerHTML = "";
@@ -250,23 +256,31 @@ function getContactFieldErrors(values) {
  * Applies field errors to the contact form.
  */
 function applyContactFieldErrors(inputs, errors) {
-  if (errors.name) {
-    setContactFieldError("contact-name-error", errors.name, inputs.nameInput);
-  }
-  if (errors.email) {
-    setContactFieldError(
-      "contact-email-error",
-      errors.email,
-      inputs.emailInput,
-    );
-  }
-  if (errors.phone) {
-    setContactFieldError(
-      "contact-phone-error",
-      errors.phone,
-      inputs.phoneInput,
-    );
-  }
+  getContactFieldErrorMappings(inputs, errors).forEach(applyContactFieldError);
+}
+
+/**
+ * Builds field error mappings for the contact form.
+ * @param {Object} inputs
+ * @param {Object} errors
+ * @returns {Array<Object>}
+ */
+function getContactFieldErrorMappings(inputs, errors) {
+  return [
+    ["contact-name-error", errors.name, inputs.nameInput],
+    ["contact-email-error", errors.email, inputs.emailInput],
+    ["contact-phone-error", errors.phone, inputs.phoneInput],
+  ]
+    .filter(([, message]) => message)
+    .map(([errorId, message, input]) => ({ errorId, message, input }));
+}
+
+/**
+ * Applies a single contact field error mapping.
+ * @param {{ errorId: string, message: string, input: HTMLInputElement }} fieldError
+ */
+function applyContactFieldError({ errorId, message, input }) {
+  setContactFieldError(errorId, message, input);
 }
 
 /**

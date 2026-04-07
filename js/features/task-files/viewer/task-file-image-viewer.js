@@ -275,6 +275,18 @@ function getTaskFileViewerTemplate() {
     <div class="task-file-viewer-backdrop" data-task-file-viewer-close></div>
     <div class="task-file-viewer-panel" role="dialog" aria-modal="true" aria-label="Task image viewer">
       <button class="task-file-viewer-close" type="button" data-task-file-viewer-close aria-label="Close image viewer">×</button>
+      ${getTaskFileViewerStageTemplate()}
+      ${getTaskFileViewerMetaTemplate()}
+    </div>
+  `;
+}
+
+/**
+ * Returns the viewer stage template.
+ * @returns {string}
+ */
+function getTaskFileViewerStageTemplate() {
+  return `
       <div class="task-file-viewer-stage">
         <button class="task-file-viewer-nav" type="button" data-task-file-viewer-prev aria-label="Previous image">‹</button>
         <div class="task-file-viewer-image-wrap">
@@ -282,6 +294,15 @@ function getTaskFileViewerTemplate() {
         </div>
         <button class="task-file-viewer-nav" type="button" data-task-file-viewer-next aria-label="Next image">›</button>
       </div>
+  `;
+}
+
+/**
+ * Returns the viewer metadata template.
+ * @returns {string}
+ */
+function getTaskFileViewerMetaTemplate() {
+  return `
       <div class="task-file-viewer-meta">
         <div class="task-file-viewer-meta-main">
           <strong class="task-file-viewer-name" data-task-file-viewer-name></strong>
@@ -293,6 +314,5 @@ function getTaskFileViewerTemplate() {
         </div>
         <a class="task-file-viewer-download" data-task-file-viewer-download href="#" download>Download</a>
       </div>
-    </div>
   `;
 }

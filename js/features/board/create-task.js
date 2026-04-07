@@ -1,3 +1,6 @@
+/**
+ * Wires add-task entry points on the board page.
+ */
 function wireAddTaskButtons() {
   const mainBtn = document.getElementById("boardAddTaskBtn");
   mainBtn?.addEventListener("click", () => openOverlayWithStatus("todo"));

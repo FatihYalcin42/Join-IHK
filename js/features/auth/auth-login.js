@@ -17,6 +17,9 @@ function wireLoginErrorHandlers({ emailInput, passwordInput }) {
   );
 }
 
+/**
+ * Initializes the login form when all required elements exist.
+ */
 function initLogin() {
   const state = getLoginState();
   if (!state) return;

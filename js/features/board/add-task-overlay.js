@@ -88,6 +88,9 @@ function setupOverlayEvents(root, status, mode) {
   }
 }
 
+/**
+ * Closes the add-task overlay and clears its content.
+ */
 function closeAddTaskOverlay() {
   const root = document.getElementById("overlayRoot");
   if (!root) return;

@@ -65,37 +65,39 @@ function clearSignupErrorState(passwordInput, confirmPasswordInput) {
  * @param {Object} fields
  * @returns {boolean}
  */
-function validateSignupInputs({
-  nameInput,
-  emailInput,
-  passwordInput,
-  confirmPasswordInput,
-  policyCheckbox,
-}) {
-  clearSignupErrorState(passwordInput, confirmPasswordInput);
-  clearFieldError("sign-up-policy-error", policyCheckbox);
-  let valid = true;
-  if (!validateUsernameField(nameInput, "username-error")) valid = false;
-  if (!validateEmailField(emailInput, "sign-up-email-error")) valid = false;
-  if (!validatePasswordField(passwordInput, "sign-up-password-error"))
-    valid = false;
-  if (
-    !validateConfirmPasswordField(
-      passwordInput,
-      confirmPasswordInput,
-      "sign-up-confirm-password-error",
-    )
-  )
-    valid = false;
-  if (!policyCheckbox.checked) {
-    showFieldError(
-      "sign-up-policy-error",
-      "Please accept the Privacy Policy.",
-      policyCheckbox,
-    );
-    valid = false;
-  }
-  return valid;
+function validateSignupInputs(fields) {
+  clearSignupErrorState(fields.passwordInput, fields.confirmPasswordInput);
+  clearFieldError("sign-up-policy-error", fields.policyCheckbox);
+  return validateSignupTextFields(fields) && validateSignupPolicyCheckbox(fields.policyCheckbox);
+}
+
+/**
+ * Validates signup text-based inputs.
+ * @param {Object} fields
+ * @returns {boolean}
+ */
+function validateSignupTextFields(fields) {
+  return [
+    validateUsernameField(fields.nameInput, "username-error"),
+    validateEmailField(fields.emailInput, "sign-up-email-error"),
+    validatePasswordField(fields.passwordInput, "sign-up-password-error"),
+    validateConfirmPasswordField(fields.passwordInput, fields.confirmPasswordInput, "sign-up-confirm-password-error"),
+  ].every(Boolean);
+}
+
+/**
+ * Validates the signup privacy policy checkbox.
+ * @param {HTMLInputElement} policyCheckbox
+ * @returns {boolean}
+ */
+function validateSignupPolicyCheckbox(policyCheckbox) {
+  if (policyCheckbox.checked) return true;
+  showFieldError(
+    "sign-up-policy-error",
+    "Please accept the Privacy Policy.",
+    policyCheckbox,
+  );
+  return false;
 }
 
 /**
@@ -316,21 +318,45 @@ function validateConfirmPasswordField(
   confirmPasswordInput,
   errorId,
 ) {
+  const error = getConfirmPasswordError(passwordInput, confirmPasswordInput);
+  return applyConfirmPasswordValidationResult(
+    errorId,
+    confirmPasswordInput,
+    error,
+  );
+}
+
+/**
+ * Gets the validation error for the confirm password field.
+ * @param {HTMLInputElement} passwordInput
+ * @param {HTMLInputElement} confirmPasswordInput
+ * @returns {string}
+ */
+function getConfirmPasswordError(passwordInput, confirmPasswordInput) {
   const value = confirmPasswordInput.value.trim();
-  if (!value) {
-    showFieldError(
-      errorId,
-      "Please confirm your password.",
-      confirmPasswordInput,
-    );
-    return false;
+  if (!value) return "Please confirm your password.";
+  if (value !== passwordInput.value.trim()) return "Passwords don't match.";
+  return "";
+}
+
+/**
+ * Applies the confirm password validation result.
+ * @param {string} errorId
+ * @param {HTMLInputElement} confirmPasswordInput
+ * @param {string} error
+ * @returns {boolean}
+ */
+function applyConfirmPasswordValidationResult(
+  errorId,
+  confirmPasswordInput,
+  error,
+) {
+  if (!error) {
+    clearFieldError(errorId, confirmPasswordInput);
+    return true;
   }
-  if (value !== passwordInput.value.trim()) {
-    showFieldError(errorId, "Passwords don't match.", confirmPasswordInput);
-    return false;
-  }
-  clearFieldError(errorId, confirmPasswordInput);
-  return true;
+  showFieldError(errorId, error, confirmPasswordInput);
+  return false;
 }
 
 /**

@@ -3,10 +3,16 @@
  */
 document.addEventListener("DOMContentLoaded", handleComponentsReady);
 
+/**
+ * Defers component initialization until shared page setup has finished.
+ */
 function handleComponentsReady() {
   withPageReady(runComponentsInit);
 }
 
+/**
+ * Runs the component rendering flow for the current page.
+ */
 function runComponentsInit() {
   if (shouldHideNavForGuest()) return applyGuestMode();
   renderNavBar();
@@ -38,6 +44,9 @@ function isPolicyPage() {
   );
 }
 
+/**
+ * Applies the guest layout without the authenticated navigation.
+ */
 function applyGuestMode() {
   document.body.classList.add("guest-mode");
   const nav = document.getElementById("nav-bar-placeholder");
@@ -46,18 +55,27 @@ function applyGuestMode() {
   if (header) header.innerHTML = getGuestHeaderTemplate();
 }
 
+/**
+ * Renders the navigation bar into its placeholder.
+ */
 function renderNavBar() {
   const host = document.getElementById("nav-bar-placeholder");
   if (!host) return;
   host.innerHTML = getNavBarTemplate();
 }
 
+/**
+ * Renders the page header into its placeholder.
+ */
 function renderHeader() {
   const host = document.getElementById("header-placeholder");
   if (!host) return;
   host.innerHTML = getHeaderTemplate();
 }
 
+/**
+ * Marks the active navigation link based on the current route.
+ */
 function setActiveNavLink() {
   const nav = document.querySelector(".nav-links nav");
   if (!nav) return;
@@ -89,6 +107,9 @@ function findActiveNavLink(nav) {
   });
 }
 
+/**
+ * Renders the initials of the current user in the header avatar.
+ */
 function renderUserInitials() {
   const el = document.getElementById("user-initials");
   if (!el) return;
@@ -98,6 +119,9 @@ function renderUserInitials() {
   el.textContent = getInitials(label);
 }
 
+/**
+ * Initializes the authenticated user menu when present.
+ */
 function initUserMenu() {
   const parts = getUserMenuParts();
   if (!parts) return;
