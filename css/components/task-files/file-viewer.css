@@ -159,3 +159,56 @@
     flex-wrap: wrap;
   }
 }
+
+@media (max-width: 450px) {
+  .task-file-viewer-panel {
+    padding: 16px 12px 20px;
+  }
+
+  .task-file-viewer-stage {
+    position: relative;
+    grid-template-columns: minmax(0, 1fr);
+    gap: 0;
+  }
+
+  .task-file-viewer-nav {
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    z-index: 1;
+    width: 36px;
+    height: 36px;
+    font-size: 22px;
+    background: rgba(255, 255, 255, 0.94);
+    box-shadow: 0 4px 18px rgba(17, 24, 39, 0.12);
+  }
+
+  .task-file-viewer-nav[data-task-file-viewer-prev] {
+    left: 8px;
+  }
+
+  .task-file-viewer-nav[data-task-file-viewer-next] {
+    right: 8px;
+  }
+
+  .task-file-viewer-image-wrap {
+    min-width: 0;
+  }
+
+  .task-file-viewer-meta-main {
+    align-items: flex-start;
+    gap: 6px;
+  }
+
+  .task-file-viewer-name {
+    white-space: normal;
+    overflow-wrap: anywhere;
+    text-overflow: initial;
+    line-height: 1.25;
+    flex: 1 1 100%;
+  }
+
+  .task-file-viewer-counter {
+    margin-left: 0;
+  }
+}
