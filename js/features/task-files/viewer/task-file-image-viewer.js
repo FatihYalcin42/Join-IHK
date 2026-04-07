@@ -45,7 +45,8 @@ function createTaskFileViewerState() {
  * @returns {Array}
  */
 function normalizeTaskViewerFiles(files) {
-  return (files || []).filter((file) => getTaskViewerSource(file));
+  if (!Array.isArray(files)) return [];
+  return files.filter((file) => getTaskViewerSource(file));
 }
 
 /**

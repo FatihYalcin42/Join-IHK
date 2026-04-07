@@ -190,7 +190,7 @@ function appendTaskFilePreviewItems(state, preview, files) {
 function buildTaskFileRow(state, entry) {
   const row = document.createElement("div");
   row.className = "file-upload-item";
-  row.appendChild(buildTaskFilePreviewButton(state, entry));
+  row.appendChild(buildTaskFileRowPreviewButton(state, entry));
   row.appendChild(buildTaskFileDeleteButton(state, entry));
   return row;
 }
@@ -201,7 +201,7 @@ function buildTaskFileRow(state, entry) {
  * @param {Object} entry
  * @returns {HTMLButtonElement}
  */
-function buildTaskFilePreviewButton(state, entry) {
+function buildTaskFileRowPreviewButton(state, entry) {
   const button = document.createElement("button");
   button.type = "button";
   button.className = "file-upload-item-preview";
