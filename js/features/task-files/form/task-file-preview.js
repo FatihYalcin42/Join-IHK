@@ -189,10 +189,26 @@ function appendTaskFilePreviewItems(state, preview, files) {
 function buildTaskFileRow(state, entry) {
   const row = document.createElement("div");
   row.className = "file-upload-item";
-  row.appendChild(buildTaskFileAvatar(entry));
-  row.appendChild(buildTaskFileNameElement(entry));
+  row.appendChild(buildTaskFilePreviewButton(state, entry));
   row.appendChild(buildTaskFileDeleteButton(state, entry));
   return row;
+}
+
+/**
+ * Builds the preview button for one file row.
+ * @param {Object} state
+ * @param {Object} entry
+ * @returns {HTMLButtonElement}
+ */
+function buildTaskFilePreviewButton(state, entry) {
+  const button = document.createElement("button");
+  button.type = "button";
+  button.className = "file-upload-item-preview";
+  button.setAttribute("aria-label", `Open file ${entry.name || "image"}`);
+  button.appendChild(buildTaskFileAvatar(entry));
+  button.appendChild(buildTaskFileNameElement(entry));
+  button.addEventListener("click", () => openTaskFilePreview(state, entry.id));
+  return button;
 }
 
 /**
@@ -257,6 +273,18 @@ function removeTaskFile(state, fileId) {
   revokeTaskFilePreview(state.selectedFiles[index]);
   state.selectedFiles.splice(index, 1);
   renderTaskFilePreview(state);
+}
+
+/**
+ * Opens the viewer for a selected preview file.
+ * @param {Object} state
+ * @param {string} fileId
+ */
+function openTaskFilePreview(state, fileId) {
+  const index = findTaskFileIndex(state?.selectedFiles, fileId);
+  if (index < 0) return;
+  if (typeof openTaskFileViewer !== "function") return;
+  openTaskFileViewer(state.selectedFiles, index);
 }
 
 /**

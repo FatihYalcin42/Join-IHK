@@ -45,7 +45,7 @@ function createTaskFileViewerState() {
  * @returns {Array}
  */
 function normalizeTaskViewerFiles(files) {
-  return (files || []).filter((file) => file?.base64);
+  return (files || []).filter((file) => getTaskViewerSource(file));
 }
 
 /**
@@ -115,7 +115,7 @@ function updateTaskFileViewerContent(root) {
 function updateTaskViewerImage(root, file) {
   const image = root.querySelector("[data-task-file-viewer-image]");
   if (!image) return;
-  image.src = file.base64;
+  image.src = getTaskViewerSource(file);
   image.alt = file.name || "Task image";
 }
 
@@ -150,8 +150,17 @@ function setTaskViewerText(root, selector, text) {
 function updateTaskViewerDownload(root, file) {
   const link = root.querySelector("[data-task-file-viewer-download]");
   if (!link) return;
-  link.href = file.base64 || "#";
+  link.href = getTaskViewerSource(file) || "#";
   link.download = file.name || "image";
+}
+
+/**
+ * Returns the best available source for a viewer file.
+ * @param {Object} file
+ * @returns {string}
+ */
+function getTaskViewerSource(file) {
+  return String(file?.base64 || file?.previewUrl || "");
 }
 
 /**
@@ -284,4 +293,3 @@ function getTaskFileViewerTemplate() {
     </div>
   `;
 }
-

@@ -62,7 +62,7 @@
 
 .file-upload-item {
   display: grid;
-  grid-template-columns: 24px minmax(0, 1fr) 24px;
+  grid-template-columns: minmax(0, 1fr) 24px;
   align-items: center;
   gap: 10px;
   width: 100%;
@@ -75,9 +75,27 @@
   min-width: 0;
 }
 
+.file-upload-item-preview {
+  border: none;
+  background: transparent;
+  padding: 0;
+  display: grid;
+  grid-template-columns: 24px minmax(0, 1fr);
+  align-items: center;
+  gap: 10px;
+  min-width: 0;
+  cursor: pointer;
+  text-align: left;
+}
+
 .file-upload-item:hover {
   background: #f2f4f5;
   border-color: #f2f4f5;
+}
+
+.file-upload-item-preview:focus-visible {
+  outline: 2px solid #29abe2;
+  outline-offset: 2px;
 }
 
 .file-upload-avatar {
